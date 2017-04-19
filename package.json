@@ -1,6 +1,6 @@
 {
   "name": "metascraper-lambda",
-  "version": "0.0.1",
+  "version": "0.1",
   "repository": "https://github.com/Tobi042/metascraper-lambda",
   "description": "An AWS deployable Lambda + API Gateway metadata scraper",
   "main": "app.js",

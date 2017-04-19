@@ -24,6 +24,22 @@ describe('Test opengraph for url', function () {
 		}).then(done, done.fail);
 	});
 
+	it('returns a valid object given an address without protocol', function (done) {
+		var url = "github.com/samholmes/node-open-graph/raw/master/test.html";
+		var expectedBody = '{"author":null,"date":null,"description":"This is a test bed for Open Graph protocol.","image":"http://google.com/images/logo.gif","publisher":"irrelavent","title":"OG Testing","url":"http://github.com/samholmes/node-open-graph/raw/master/test.html"}';
+		underTest.proxyRouter({
+			requestContext: {
+				resourcePath: '/metascraper',
+				httpMethod: 'POST'
+			},
+			queryStringParameters: {
+				'url': 'http://github.com/samholmes/node-open-graph/raw/master/test.html'
+			}
+		}, lambdaContextSpy).then(function () {
+			expect(lambdaContextSpy.done).toHaveBeenCalledWith(null, jasmine.objectContaining({body: expectedBody}));
+		}).then(done, done.fail);
+	});
+
 	it('fails when run without a url', function (done) {
 		var expectedBody = '{"errorMessage":"Invalid request. url parameter missing"}';
 		underTest.proxyRouter({
@@ -38,7 +54,6 @@ describe('Test opengraph for url', function () {
 
 	it('fails when run with an invalid url', function (done) {
 		var url = "http://github.com/samholmes/node-open-graph/raw/master/test.html";
-		var expectedBody = '{"errorMessage":"Invalid request. url invalid or non-HTTP(S)"}';
 		underTest.proxyRouter({
 			requestContext: {
 				resourcePath: '/metascraper',
@@ -49,7 +64,7 @@ describe('Test opengraph for url', function () {
 
 			}
 		}, lambdaContextSpy).then(function () {
-			expect(lambdaContextSpy.done).toHaveBeenCalledWith(null, jasmine.objectContaining({body: expectedBody}));
+			expect(lambdaContextSpy.done).toHaveBeenCalledWith(null, jasmine.objectContaining({statusCode: 500}));
 		}).then(done, done.fail);
 	});
 });

@@ -12,7 +12,11 @@ api.post('/metascraper', function (request) {
 	// Check if it's a somewhat valid URL
 	var url = request.queryString.url;
 	if (!/^(http|https):\/\/[^ "]+$/.test(url)) {
-		throw new Error("Invalid request. url invalid or non-HTTP(S)");
+		// Check if maybe only the http part is missing?
+		url = "http://" + url;
+		if (!/^(http|https):\/\/[^ "]+$/.test(url)) {
+			throw new Error("Invalid request. url invalid or non-HTTP(S)");
+		}
 	}
 	console.log("Processing request for URL", url);
 
